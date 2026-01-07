@@ -1,227 +1,126 @@
 AI Backend – Retrieval-Augmented Generation (RAG)
 
-This repository contains a production-style AI backend that implements a complete Retrieval-Augmented Generation (RAG) pipeline.
+A production-style AI backend implementing a complete Retrieval-Augmented Generation (RAG) pipeline with clean architecture, async processing, and persistent memory.
 
-The project is built to demonstrate applied AI engineering principles, focusing on clean architecture, separation of concerns, and real-world backend patterns.
+Status: Step 4 (RAG) complete and intentionally frozen.
 
-📌 Project Status
+🚀 What This Demonstrates
 
-✅ Step 4 (RAG) – Complete and Frozen
+This project proves the ability to:
 
-This repository is intentionally frozen at Step 4 of the AI Engineer roadmap.
-Evaluation, observability, and monitoring (Step 5) are not included by design.
+Design end-to-end AI systems, not just call LLM APIs
 
-🧠 What This Project Does
+Build production-grade backends using FastAPI
 
-At a high level, this backend:
-
-Ingests raw text documents
-
-Splits them into chunks
-
-Generates embeddings
-
-Stores embeddings in a vector database
-
-Stores metadata and job state in PostgreSQL
-
-Retrieves relevant context using semantic search
-
-Generates grounded answers using an LLM
-
-In short:
-
-Documents → Embeddings → Vector Search → Context → LLM Answer
-
-🏗️ Architecture Overview
-Core Components
-
-FastAPI – REST API layer
-
-Background Worker – Asynchronous ingestion and processing
-
-Chroma – Vector database for semantic search
-
-PostgreSQL – Metadata and job state storage
-
-OpenRouter – LLM + embeddings provider
-
-Docker Compose – Local orchestration
-
-Design Principles
-
-Thin API routes
-
-Business logic isolated in services
-
-Clear separation between:
-
-semantic memory (vectors)
-
-system state (relational DB)
-
-Async-safe ingestion pipeline
-
-Provider-agnostic LLM abstraction
-
-📂 Project Structure (Simplified)
-ai-backend/
-├── app/
-│   ├── routes/        # FastAPI endpoints
-│   ├── rag/           # Retrieval + generation logic
-│   ├── db/            # PostgreSQL models & session
-│   ├── vectorstore/   # Chroma interface
-│   └── config/        # Settings & environment loading
-│
-├── worker/
-│   └── worker.py      # Background ingestion worker
-│
-├── docker-compose.yml
-├── Dockerfile
-├── requirements.txt
-└── README.md
-
-🔌 API Endpoints
-Health
-GET /health
-
-Ingest Document
-POST /ingest
-
-
-Request
-
-{
-  "text": "Your document text here"
-}
-
-
-This triggers:
-
-chunking
-
-embedding generation
-
-vector storage
-
-metadata persistence
-
-Processing is handled asynchronously by the worker.
-
-Retrieve & Generate Answer
-POST /retrieve
-
-
-Request
-
-{
-  "query": "What is Retrieval-Augmented Generation?"
-}
-
-
-Response
-
-Grounded answer generated from retrieved context
-
-Retrieved context included for transparency
-
-🗄️ Persistence Model
-Vector Store (Chroma)
-
-Stores chunk embeddings
-
-Used for semantic similarity search
-
-Relational Database (PostgreSQL)
-
-Stores ingestion jobs
-
-Tracks processing status
-
-Maintains structured system metadata
-
-This dual-store approach avoids overloading the vector DB with system state.
-
-⚙️ Running Locally
-Prerequisites
-
-Docker
-
-Docker Compose
-
-Environment Variables
-
-Create a .env file in the project root:
-
-OPENAI_API_KEY=sk-or-xxxxxxxxxxxxxxxxxxxx
-
-
-⚠️ Use an OpenRouter API key (sk-or-...), not a direct OpenAI key.
-
-Start the system
-docker compose up --build
-
-
-Then open:
-
-http://127.0.0.1:8000/docs
-
-🧪 Verified Functionality
-
-✅ Document ingestion
-
-✅ Text chunking
-
-✅ Embeddings generation
-
-✅ Vector storage (Chroma)
-
-✅ Metadata layer (Postgres)
-
-✅ Semantic retrieval
-
-✅ Context-grounded generation
-
-🧭 Roadmap Alignment
-
-This project completes Step 4 – Retrieval-Augmented Generation.
-
-Step	Status
-Document ingestion	✅
-Text chunking	✅
-Embeddings	✅
-Vector store (Chroma)	✅
-Metadata layer (Postgres)	✅
-Retrieval	✅
-Generation	✅
-🔒 Freeze Notice
-
-This repository is intentionally frozen at Step 4.
-
-Future work such as:
-
-evaluation
-
-observability
-
-tracing
-
-guardrails
-
-will be developed in a separate branch or repository.
-
-🎯 Why This Project Exists
-
-This project demonstrates the ability to:
-
-Design AI systems end-to-end
-
-Build production-style backends
-
-Apply RAG correctly (not prompt stuffing)
+Implement correct RAG (retrieval → grounding → generation)
 
 Separate semantic memory from system state
 
-Debug real LLM integration issues
+Integrate LLM providers safely and debuggably
 
-It is intended as a learning milestone and portfolio project, not a full product.
+Operate async pipelines with background workers
+
+🧠 System Overview
+
+Flow
+
+Document → Chunking → Embeddings → Vector DB → Retrieval → Context → LLM Answer
+
+
+Key Design Choices
+
+Thin API routes, logic in services
+
+Async ingestion via background worker
+
+Vector DB for semantic search
+
+Relational DB for metadata & job state
+
+Provider-agnostic LLM abstraction
+
+🏗️ Tech Stack
+
+FastAPI – API layer
+
+Background Worker – async ingestion
+
+Chroma – vector database
+
+PostgreSQL – metadata & job tracking
+
+OpenRouter – LLM + embeddings
+
+Docker Compose – local orchestration
+
+🔌 Core API Endpoints
+Ingest
+POST /ingest
+
+
+Triggers async document ingestion, chunking, embedding, and storage.
+
+Retrieve & Generate
+POST /retrieve
+
+
+Performs semantic retrieval and returns a context-grounded LLM response.
+
+Health
+GET /health
+
+
+Swagger UI available at:
+
+/docs
+
+🗄️ Persistence Model
+
+Chroma (Vector DB)
+Stores embeddings for semantic similarity search
+
+PostgreSQL (Relational DB)
+Stores ingestion jobs, processing state, and metadata
+
+This avoids the common anti-pattern of storing system state in vector databases.
+
+✅ RAG Capability Coverage
+
+This repository fully implements:
+
+Document ingestion
+
+Text chunking
+
+Embedding generation
+
+Vector storage (Chroma)
+
+Metadata layer (Postgres)
+
+Semantic retrieval
+
+Context-grounded generation
+
+👉 Complete RAG loop implemented and verified
+
+📌 Project Status
+
+🔒 Frozen at Step 4 (RAG)
+
+Evaluation, observability, and monitoring (Step 5) are intentionally excluded to keep this repository a clean RAG baseline.
+
+⚙️ Run Locally
+docker compose up --build
+
+
+Environment variable required:
+
+OPENAI_API_KEY=sk-or-xxxxxxxxxxxxxxxx
+
+
+(OpenRouter key)
+
+🎯 Why This Project Exists
+
+This is a portfolio and learning milestone project built to demonstrate applied AI engineering skills, system design clarity, and real-world backend patterns — not a toy demo or UI app.
