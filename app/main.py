@@ -15,6 +15,8 @@ from app.services.ai_service import process_jobs_loop
 
 from dotenv import load_dotenv
 
+from app.routes import ingest, retrieve
+
 load_dotenv()
 
 # -------- LOGGING (BASIC) --------
@@ -64,3 +66,7 @@ async def global_exception_handler(request: Request, exc: Exception):
         status_code=500,
         content={"error": "Internal server error", "detail": str(exc)},
     )
+
+
+app.include_router(ingest.router, tags=["ingest"])
+app.include_router(retrieve.router, tags=["retrieve"])

@@ -7,3 +7,6 @@ cd infra
 docker compose up --build     # run production-like system
 docker compose down -v        # stop + delete database volume
 docker system prune --volumes # clean unused data
+docker compose ps             # Check status:
+docker compose start          # Resume stopped containers (start existing ones):
+

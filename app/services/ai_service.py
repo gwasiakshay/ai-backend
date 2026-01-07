@@ -6,6 +6,7 @@ import logging
 from dotenv import load_dotenv
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import SQLAlchemyError, ProgrammingError
 from openai import AsyncOpenAI
 
 from app.models import Job
@@ -102,28 +103,25 @@ async def process_jobs_loop():
                 job = result.scalars().first()
 
                 if not job:
-                    quiet += 1
-                    if quiet >= 10:
-                        logger.info("⏳ Worker idle...")
-                        quiet = 0
-                    await asyncio.sleep(3)
+                    logger.info("⏳ Worker idle...")
+                    await asyncio.sleep(5)
                     continue
 
-                quiet = 0
+                # quiet = 0
                 logger.info(f"⚙️ Processing Job {job.id} → {job.text}")
 
                 output = await analyze_text(job.text)
 
                 job.status = "completed"
                 job.result = json.dumps(output)
-                try:
-                    await session.commit()
-                    logger.info(f"🎉 Job {job.id} done")
-                except Exception as e:
-                    logger.error(f"DB Write Failed: {e}")
-                    await session.rollback()
 
-        except Exception as fatal:
-            logger.critical(f"🔥 Worker CRASH: {fatal}")
+                await session.commit()
+                logger.info(f"🎉 Job {job.id} done")
 
-        await asyncio.sleep(2)
+        except ProgrammingError:
+            logger.warning("⏳ Tables not ready yet — waiting...")
+            await asyncio.sleep(5)
+
+        except Exception as e:
+            logger.exception("🔥 Worker fatal error")
+            await asyncio.sleep(5)

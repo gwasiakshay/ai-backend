@@ -1,0 +1,51 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.env
+.env.*
+venv/
+.venv/
+
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# Docker
+# =========================
+docker-compose.override.yml
+
+# =========================
+# Database (Postgres)
+# =========================
+pgdata/
+postgres-data/
+data/
+
+# =========================
+# Vector DB (Chroma)
+# =========================
+chroma/
+chromadb/
+vectorstore/
+
+# =========================
+# Cache / temp
+# =========================
+.cache/
+tmp/
